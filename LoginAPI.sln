@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35027.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EndPoint", "EndPoint", "{C70AC69F-CEBD-49CB-85E0-B8780A6F996F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "loginAPP", "loginAPP\loginAPP.csproj", "{6F739092-1A48-493A-A357-1E3A7AC44445}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F739092-1A48-493A-A357-1E3A7AC44445}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F739092-1A48-493A-A357-1E3A7AC44445}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F739092-1A48-493A-A357-1E3A7AC44445}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F739092-1A48-493A-A357-1E3A7AC44445}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6F739092-1A48-493A-A357-1E3A7AC44445} = {C70AC69F-CEBD-49CB-85E0-B8780A6F996F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C8BADDA-1051-478A-B216-ED1FD91827B9}
+	EndGlobalSection
+EndGlobal
