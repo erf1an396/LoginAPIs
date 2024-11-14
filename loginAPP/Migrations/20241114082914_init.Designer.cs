@@ -12,8 +12,8 @@ using loginAPP.Context;
 namespace loginAPP.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241113232517_add_Expense")]
-    partial class add_Expense
+    [Migration("20241114082914_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,7 +43,12 @@ namespace loginAPP.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Expenses");
                 });
@@ -69,6 +74,22 @@ namespace loginAPP.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("loginAPP.Model.Expense", b =>
+                {
+                    b.HasOne("loginAPP.Model.User", "User")
+                        .WithMany("Expenses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("loginAPP.Model.User", b =>
+                {
+                    b.Navigation("Expenses");
                 });
 #pragma warning restore 612, 618
         }

@@ -16,5 +16,7 @@ namespace loginAPP.Model
 
         public string Email { get; set; }
 
+        public ICollection<Expense> Expenses { get; set; } = new List<Expense>();
+
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace loginAPP.Controllers
 
@@ -33,6 +34,13 @@ namespace loginAPP.Controllers
         [HttpPost]
         public async Task<IActionResult> AddExpense([FromBody] ExpenseVM model)
         {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null)
+            {
+                return Unauthorized("UserId don't have token");
+            }
+
+            model.UserId = Guid.Parse(userIdClaim);
 
             var result = await _expense.AddExpenseAsync(model);
 

@@ -27,7 +27,7 @@ namespace loginAPP.Business
 
         public async Task<List<ExpenseVM>> GetExpensesAsync()
         {
-           return await _db.Expenses.Select(c => new ExpenseVM()
+           var resutl =  await _db.Expenses.Select(c => new ExpenseVM()
            {
                
                Date = c.Date,
@@ -37,10 +37,16 @@ namespace loginAPP.Business
 
            }).ToListAsync();
 
+
+
+            return resutl;
+
         }
 
         public async Task<ExpenseVM> AddExpenseAsync(ExpenseVM model)
         {
+            
+
             var expense = new Model.Expense()
             {
                 UserId = model.UserId,
@@ -51,6 +57,8 @@ namespace loginAPP.Business
 
             _db.Expenses.Add(expense);
             await _db.SaveChangesAsync();
+
+            
 
             var expenseVM = new ExpenseVM()
             {

@@ -14,7 +14,19 @@ namespace loginAPP.Context
         public DbSet<Expense> Expenses { get; set; }
 
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Expense>()
+        .HasOne(sl => sl.User)
+        .WithMany(up => up.Expenses)
+        .HasForeignKey(sl => sl.UserId)
+        .OnDelete(DeleteBehavior.Cascade);
+        }
 
     }
+
+    
 
 }
