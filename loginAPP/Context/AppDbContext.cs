@@ -11,6 +11,9 @@ namespace loginAPP.Context
 
         public DbSet<User> Users { get; set; }
 
+        public DbSet<Expense> Expenses { get; set; }
+
+
 
     }
 
