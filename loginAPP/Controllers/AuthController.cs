@@ -28,5 +28,7 @@ namespace loginAPP.Controllers
         {
             return await _auth.LoginAsync(model);
         }
+
+        
     }
 }

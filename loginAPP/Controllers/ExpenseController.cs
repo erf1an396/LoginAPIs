@@ -24,12 +24,28 @@ namespace loginAPP.Controllers
             _expense = expense;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetExpenses()
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetExpenses(string userId)
         {
-            var expense = _expense.GetExpensesAsync();
+            var expense = await _expense.GetExpenseByIdAsync(userId);
             return Ok(expense);
         }
+
+        [HttpGet("summary/{userId}")]
+        public async Task<IActionResult> GetExpenseSummary(string userId)
+        {
+            var summary = await _expense.GetExpenseSummaryAsync(userId);
+            return Ok(summary); 
+        }
+
+        [HttpGet("monthly-finance/{userId}")]
+        public async Task<IActionResult> GetMontlyFinance(string userId)
+        {
+            var data = await _expense.GetMontlyFinancesAsync(userId);
+            return Ok(data);
+        }
+
+
 
         [HttpPost]
         public async Task<IActionResult> AddExpense([FromBody] ExpenseVM model)
@@ -55,7 +71,14 @@ namespace loginAPP.Controllers
             {
                 return NotFound("Expense not found.");
             }
-            return Ok("Expense deleted successfully.");
+            return Ok();
+        }
+
+
+        [HttpGet("RolesById")]
+        public async Task<IActionResult> GetRoleById(string userId)
+        {
+            return Ok(await _expense.GetRoleByIdAsync(userId));
         }
 
 

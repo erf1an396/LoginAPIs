@@ -5,7 +5,7 @@ VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EndPoint", "EndPoint", "{C70AC69F-CEBD-49CB-85E0-B8780A6F996F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "loginAPP", "loginAPP\loginAPP.csproj", "{6F739092-1A48-493A-A357-1E3A7AC44445}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "loginAPP", "loginAPP\loginAPP.csproj", "{6F739092-1A48-493A-A357-1E3A7AC44445}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

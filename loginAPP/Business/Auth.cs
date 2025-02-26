@@ -8,6 +8,9 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http.HttpResults;
+using System.Linq.Expressions;
 
 namespace loginAPP.Business
 {
@@ -16,58 +19,67 @@ namespace loginAPP.Business
         Task<IActionResult> RegisterAsync(RegisterVM model);
         Task<IActionResult> LoginAsync(LoginVM model);
 
+        
+
+
     }
     public class Auth : IAuth
     {
         private readonly AppDbContext _db;
         private readonly IConfiguration _configuration;
+        private readonly UserManager<ApplicationUser> _userManager;
 
 
-        public Auth(AppDbContext db, IConfiguration configuration)
+        public Auth(AppDbContext db, IConfiguration configuration , UserManager<ApplicationUser> userManager)
         {
             _db = db;
             _configuration = configuration;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> RegisterAsync(RegisterVM model)
         {
             try
             {
-                if (await _db.Users.AnyAsync(u => u.Username == model.Username))
-                    return new BadRequestObjectResult("Username already Exist");
+                var existingUser = await _userManager.FindByNameAsync(model.Username);
+                if (existingUser != null)
+                    return new BadRequestObjectResult("Username already exist");
+                
 
-                var user = new User
+                var user = new ApplicationUser
                 {
-                    Username = model.Username,
+                    UserName = model.Username,
                     Email = model.Email,
-                    PasswordHash = HashPassword(model.Password)
+                   
                 };
 
-                _db.Users.Add(user);
-                await _db.SaveChangesAsync();
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (!result.Succeeded)
+                {
+                    return new BadRequestObjectResult(result.Errors);
+                }
+
+                await _userManager.AddToRoleAsync(user, "user");
 
                 var token = GenerateJwtToken(user);
-                return new OkObjectResult(new
-                {
-                    Token = token,
-                });
-
+                return new OkObjectResult(new { Token = token });
+ 
             }
+
             catch (Exception ex)
             {
-
-                throw;
-                return null;
+                return new BadRequestObjectResult(ex.Message);
             }
-
+            
         }
 
         public async Task<IActionResult> LoginAsync(LoginVM model)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == model.Username);
-
-            if (user == null || !VerifyPassword(model.Password, user.PasswordHash))
+            var user = await _userManager.FindByNameAsync(model.Username);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
+            {
                 return new UnauthorizedObjectResult("invalid username or password");
+            }
 
 
             var token = GenerateJwtToken(user);
@@ -75,10 +87,15 @@ namespace loginAPP.Business
         }
 
 
-        private string HashPassword(string password) => BCrypt.Net.BCrypt.HashPassword(password);
-        private bool VerifyPassword(string password, string hash) => BCrypt.Net.BCrypt.Verify(password, hash);
+        
 
-        private string GenerateJwtToken(User user)
+
+        //private string HashPassword(string password) => BCrypt.Net.BCrypt.HashPassword(password);
+        //private bool VerifyPassword(string password, string hash) => BCrypt.Net.BCrypt.Verify(password, hash);
+
+
+
+        private string GenerateJwtToken(ApplicationUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_configuration["jwtConfig:SignInKey"]);
@@ -87,8 +104,9 @@ namespace loginAPP.Business
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name , user.Username),
-                    new Claim(ClaimTypes.NameIdentifier , user.Id.ToString())
+                    new Claim(ClaimTypes.Name , user.UserName),
+                    new Claim(ClaimTypes.NameIdentifier , user.Id.ToString()),
+                    new Claim("Test" , user.Id.ToString()),
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 Issuer = _configuration["jwtConfig:SignInKey"],
